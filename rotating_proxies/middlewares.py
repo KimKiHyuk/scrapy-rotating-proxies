@@ -135,8 +135,11 @@ class RotatingProxyMiddleware(object):
                     logger.error("No proxies available even after a reset.")
                     raise CloseSpider("no_proxies_after_reset")
 
-        request.meta['proxy'] = proxy
-        request.meta['download_slot'] = self.get_proxy_slot(proxy)
+        if 'splash' in request.meta.keys():
+            request.meta['splash']['args']['proxy'] = proxy
+        else:
+            request.meta['proxy'] = proxy
+            request.meta['download_slot'] = self.get_proxy_slot(proxy)
         request.meta['_rotating_proxy'] = True
 
     def get_proxy_slot(self, proxy):
